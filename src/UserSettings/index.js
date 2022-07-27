@@ -20,7 +20,7 @@ function UserSettings({ options, savedUserPrefs, onSave }) {
     });
   };
   return (
-    <form className="UserSettings" onSubmit={handleSave}>
+    <form role="form" className="UserSettings" onSubmit={handleSave}>
       {options.map((o) => (
         <label key={o.id}>
           <input
