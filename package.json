@@ -1,0 +1,27 @@
+{
+  "name": "esbuild-reactjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.14.50",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "static-here": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "babel-jest": "^26.3.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.3",
+    "jest": "^26.4.1"
+  }
+}
