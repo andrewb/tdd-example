@@ -22922,10 +22922,11 @@
       });
     };
     return /* @__PURE__ */ import_react.default.createElement("form", {
-      role: "form",
+      "data-testid": "user-settings",
       className: "UserSettings",
       onSubmit: handleSave
     }, options.map((o) => /* @__PURE__ */ import_react.default.createElement("label", {
+      "data-testid": "option",
       key: o.id
     }, /* @__PURE__ */ import_react.default.createElement("input", {
       name: o.id,
