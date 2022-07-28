@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import UserSettings from './UserSettings';
 
 const ACCOUNT_OPTIONS = [
@@ -31,13 +31,15 @@ const updateUser = (options) => {
   return p;
 };
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
   <div className="App">
     <UserSettings
       options={ACCOUNT_OPTIONS}
       savedUserPrefs={USER.preferences}
       onSave={updateUser}
     />
-  </div>,
-  document.getElementById('root')
+  </div>
 );
