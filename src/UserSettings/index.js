@@ -20,9 +20,13 @@ function UserSettings({ options, savedUserPrefs, onSave }) {
     });
   };
   return (
-    <form role="form" className="UserSettings" onSubmit={handleSave}>
+    <form
+      data-testid="user-settings"
+      className="UserSettings"
+      onSubmit={handleSave}
+    >
       {options.map((o) => (
-        <label key={o.id}>
+        <label data-testid="option" key={o.id}>
           <input
             name={o.id}
             type="checkbox"

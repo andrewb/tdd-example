@@ -1,12 +1,23 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UserSettings from './index';
+
+// function setup({
+//   options = [
+//     { id: '1', name: 'Foo' },
+//     { id: '2', name: 'Bar' },
+//     { id: '3', name: 'Baz' }
+//   ],
+//   ...rest
+// } = {}) {
+//   render(<UserSettings options={options} {...rest} />);
+// }
 
 describe('<UserSettings />', () => {
   it('should render', () => {
     render(<UserSettings />);
-    expect(screen.getByRole('form')).toBeInTheDocument();
+    expect(screen.getByTestId('user-settings')).toBeInTheDocument();
   });
 
   it('renders a list of settings', () => {
@@ -19,10 +30,23 @@ describe('<UserSettings />', () => {
         ]}
       />
     );
-    expect(screen.getByRole('checkbox', { name: 'Foo' })).not.toBeChecked();
-    expect(screen.getByRole('checkbox', { name: 'Bar' })).not.toBeChecked();
-    expect(screen.getByRole('checkbox', { name: 'Baz' })).not.toBeChecked();
+    // Renders a label for each option
+    expect(screen.queryAllByTestId('option').length).toBe(3);
+    // Renders the correct name and value for each option
+    expect(screen.getByRole('checkbox', { name: 'Foo' })).toHaveAttribute(
+      'value',
+      '1'
+    );
+    expect(screen.getByRole('checkbox', { name: 'Bar' })).toHaveAttribute(
+      'value',
+      '2'
+    );
+    expect(screen.getByRole('checkbox', { name: 'Baz' })).toHaveAttribute(
+      'value',
+      '3'
+    );
   });
+
   it('shows the user their saved settings', () => {
     const savedUserPrefs = ['2', '3'];
     render(
@@ -39,6 +63,7 @@ describe('<UserSettings />', () => {
     expect(screen.getByRole('checkbox', { name: 'Bar' })).toBeChecked();
     expect(screen.getByRole('checkbox', { name: 'Baz' })).toBeChecked();
   });
+
   it('updates the selection when a checkbox is clicked', async () => {
     const user = userEvent.setup();
     const savedUserPrefs = [];
@@ -53,13 +78,17 @@ describe('<UserSettings />', () => {
       />
     );
     const checkbox = screen.getByRole('checkbox', { name: 'Foo' });
+    // Checkbox should NOT be checked by default
     expect(checkbox).not.toBeChecked();
-    // Check the checkbox
+    // Simulate a click event
     await user.click(checkbox);
+    // The checkbox should now be checked
     expect(checkbox).toBeChecked();
   });
+
   it("saves the user's settings on submit", async () => {
     const user = userEvent.setup();
+    // Option 1 is saved
     const savedUserPrefs = ['1'];
     const onSave = jest.fn().mockResolvedValue(true);
 
@@ -74,11 +103,15 @@ describe('<UserSettings />', () => {
         onSave={onSave}
       />
     );
-
-    await user.click(screen.getByRole('checkbox', { name: 'Baz' }));
+    // Check option 3
+    user.click(screen.getByRole('checkbox', { name: 'Baz' }));
     // 1 and 3 are checked
-    await user.click(screen.getByRole('button', { name: 'Save' }));
-    expect(onSave).toHaveBeenCalledWith(['1', '3']);
+    user.click(screen.getByRole('button', { name: 'Save' }));
+
+    await waitFor(() =>
+      // Save is called with the correct arguments
+      expect(onSave).toHaveBeenCalledWith(['1', '3'])
+    );
   });
 
   it('shows a saving message', async () => {
@@ -97,10 +130,14 @@ describe('<UserSettings />', () => {
         onSave={onSave}
       />
     );
-
+    // Click save
     user.click(screen.getByRole('button', { name: 'Save' }));
 
-    await screen.findByText('Saving...');
-    await screen.findByText('Save');
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled()
+    );
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled()
+    );
   });
 });
