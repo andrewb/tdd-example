@@ -30,21 +30,11 @@ describe('<UserSettings />', () => {
         ]}
       />
     );
-    // Renders a label for each option
-    expect(screen.queryAllByTestId('option').length).toBe(3);
-    // Renders the correct name and value for each option
-    expect(screen.getByRole('checkbox', { name: 'Foo' })).toHaveAttribute(
-      'value',
-      '1'
-    );
-    expect(screen.getByRole('checkbox', { name: 'Bar' })).toHaveAttribute(
-      'value',
-      '2'
-    );
-    expect(screen.getByRole('checkbox', { name: 'Baz' })).toHaveAttribute(
-      'value',
-      '3'
-    );
+    expect(screen.getAllByTestId('option').length).toBe(3);
+    // A checkbox should be rendered for each option
+    expect(screen.getByRole('checkbox', { name: 'Foo' })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Bar' })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Baz' })).toBeInTheDocument();
   });
 
   it('shows the user their saved settings', () => {
@@ -132,12 +122,11 @@ describe('<UserSettings />', () => {
     );
     // Click save
     user.click(screen.getByRole('button', { name: 'Save' }));
-
-    await waitFor(() =>
-      expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled()
-    );
-    await waitFor(() =>
-      expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled()
-    );
+    // Button should become disabled and show "Saving..." while `onSave` is pending
+    expect(
+      await screen.findByRole('button', { name: 'Saving...' })
+    ).toBeDisabled();
+    // Button should become enabled after `onSave` completes
+    expect(await screen.findByRole('button', { name: 'Save' })).toBeEnabled();
   });
 });
