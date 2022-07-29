@@ -30,7 +30,7 @@ describe('<UserSettings />', () => {
         ]}
       />
     );
-    expect(screen.getAllByTestId('option').length).toBe(3);
+    expect(screen.getAllByTestId('option')).toHaveLength(3);
     // A checkbox should be rendered for each option
     expect(screen.getByRole('checkbox', { name: 'Foo' })).toBeInTheDocument();
     expect(screen.getByRole('checkbox', { name: 'Bar' })).toBeInTheDocument();
