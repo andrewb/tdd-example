@@ -122,11 +122,15 @@ describe('<UserSettings />', () => {
     );
     // Click save
     user.click(screen.getByRole('button', { name: 'Save' }));
-    // Button should become disabled and show "Saving..." while `onSave` is pending
-    expect(
-      await screen.findByRole('button', { name: 'Saving...' })
-    ).toBeDisabled();
-    // Button should become enabled after `onSave` completes
-    expect(await screen.findByRole('button', { name: 'Save' })).toBeEnabled();
+
+    await waitFor(() =>
+      // Button should become disabled and show "Saving..." while `onSave` is pending
+      expect(screen.getByRole('button', { name: 'Saving...' })).toBeDisabled()
+    );
+
+    await waitFor(() =>
+      // Button should become enabled after `onSave` completes
+      expect(screen.getByRole('button', { name: 'Save' })).toBeEnabled()
+    );
   });
 });
